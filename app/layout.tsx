@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Merriweather, Open_Sans } from "next/font/google";
 import "./globals.css";
+import { dark } from '@clerk/themes'
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 
 const merriWeather = Merriweather({
@@ -27,7 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    appearance={{
+      baseTheme: dark,
+    }}
+    >
       <html lang="en">
         <body
           className={`${openSans.className} ${merriWeather.variable}  antialiased`}
