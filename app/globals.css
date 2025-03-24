@@ -120,3 +120,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+/* .bg-custom-gradient{
+  background: linear-gradient(90deg, #09090b 0%, #1c2d3d 100%);
+} */
+
+.bg-custom-gradient {
+  background: linear-gradient(180deg, #1c2d3d 0%,#09090b 50%, #09090b 100%);
+}

@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Merriweather, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const merriWeather = Merriweather({
+  subsets: ['latin'], 
+  weight: ['400', '700'], 
+  style: 'normal', 
+  variable:"--font-merriWeather"
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  weight: ['400', '600'], // Regular and semi-bold weights for body text
+  style: 'normal',
 });
 
 export const metadata: Metadata = {
@@ -27,7 +30,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${openSans.className} ${merriWeather.variable}  antialiased`}
         >
           <ClerkLoading><div className="flex justify-center items-center h-screen w-full">
             Loading...
