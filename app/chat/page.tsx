@@ -47,6 +47,7 @@ export default function Home() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+    setInput("")
 
     setIsLoading(true);
     setMessages((prev) => [...prev, { role: "user", content: input }]);
@@ -110,8 +111,8 @@ export default function Home() {
     <div className="flex h-screen relative text-white">
       {/* Sidebar */}
       <div
-        className={`${isSidebarOpen ? "absolute border-r border-[#fff]/10 sm:static h-full w-[300px]" : "w-0"
-          } bg-[#0d0d0d] text-white flex flex-col transition-all duration-300 ease-in-out overflow-hidden`}
+        className={`${isSidebarOpen ? " border-r border-[#fff]/10 w-[300px]" : " w-0"
+          } bg-[#1f1f23] text-white absolute sm:static h-full flex flex-col transition-all duration-300 ease-in-out overflow-hidden`}
       >
 
         {/* New Chat Button */}
@@ -127,7 +128,7 @@ export default function Home() {
 
           <button
             onClick={startNewChat}
-            className="w-full flex items-center gap-2 px-4 py-2 bg-[#0d0d0d] border border-[#fff]/10 rounded-md transition"
+            className="w-full flex items-center gap-2 px-4 py-2 bg-[#1f1f23] border border-[#fff]/10 rounded-md transition"
           >
             <Plus size={17} />
             New chat
@@ -152,7 +153,7 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-[#0d0d0d] flex flex-col h-full overflow-hidden">
+      <div className="flex-1 bg-[#1f1f23] flex flex-col h-full overflow-hidden">
         {/* Header */}
         <header className="  border-[#fff]/10 shadow-sm py-3 px-4 border-b flex justify-between items-center">
           <div className="flex justify-center  items-center">
@@ -192,22 +193,21 @@ export default function Home() {
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {message.role === 'assistant' && (
-                <div className="w-11 h-11 mr-2 rounded-full bg-black flex items-center justify-center text-white">
-
+                <div className="min-w-11 min-h-11 max-w-11 max-h-11 mr-2 rounded-full bg-black flex items-center justify-center text-white">
                   <Bot />
                 </div>
               )}
               <div
-                className={`max-w-3xl text-white  rounded-lg px-4 py-2 ${message.role === 'user'
+                className={`max-w-[250px] sm:max-w-3xl text-white  rounded-lg px-4 py-2 ${message.role === 'user'
                   ? 'bg-blue-500 rounded-br-none'
-                  : 'bg-[#0d0d0d] border border-[#fff]/10 shadow-sm rounded-bl-none'
+                  : 'border border-[#fff]/10 shadow-sm rounded-bl-none'
                   }`}
               >
-                <div className="whitespace-pre-wrap">{message.content}</div>
+                <div className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</div>
 
               </div>
               {message.role === 'user' && (
-                <div className="w-11 h-11 ml-2 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden text-gray-700">
+                <div className="sm:w-11 w-8 h-8 sm:h-11 ml-2 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden text-gray-700">
                   <Image src={user?.imageUrl || ""} alt={user?.fullName || ""} width={44} height={44} className="object-cover w-full h-full" />
                 </div>
               )}
@@ -217,7 +217,7 @@ export default function Home() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t bg-[#0d0d0d] border-y border-[#fff]/10 p-4">
+        <div className="border-t border-y border-[#fff]/10 p-4">
           <form onSubmit={handleSubmit} className="flex space-x-2">
             <input
               ref={inputRef}
