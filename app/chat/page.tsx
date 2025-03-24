@@ -206,8 +206,8 @@ export default function Home() {
 
               </div>
               {message.role === 'user' && (
-                <div className="w-11 h-11 ml-2 rounded-full bg-gray-300 flex items-center justify-center text-gray-700">
-                 <Image src={user?.imageUrl || ""} alt={user?.fullName || ""}/>
+                <div className="w-11 h-11 ml-2 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden text-gray-700">
+                 <Image src={user?.imageUrl || ""} alt={user?.fullName || ""} width={44} height={44} className="object-cover w-full h-full"/>
                 </div>
               )}
             </div>
