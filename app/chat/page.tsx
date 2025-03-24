@@ -1,10 +1,10 @@
 "use client";
-
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Bot, Plus, Send } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+
 
 // Define Types
 type Message = {
@@ -57,6 +57,7 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input }),
+
       });
 
       if (!res.body) throw new Error("No response body");
@@ -177,16 +178,17 @@ export default function Home() {
             <div className="flex flex-col items-center gap-4 justify-center h-full text-center text-white/80">
               <div className="w-20 h-20 mr-2 rounded-full bg-black flex items-center justify-center text-white">
 
-                <Bot size={40}/>
+                <Bot size={40} />
               </div>
               <div>
-              <p className="text-lg font-medium">How can I help you today?</p>
-              <p className="mt-2 max-w-md">Ask me anything and I'll do my best to provide a helpful response.</p>
+                <p className="text-lg font-medium">How can I help you today?</p>
+                <p className="mt-2 max-w-md">Ask me anything and I'll do my best to provide a helpful response.</p>
               </div>
-             
+
             </div>
           )}
 
+        
           {messages.map((message, index) => (
             <div
               key={index}
