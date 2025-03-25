@@ -1,13 +1,16 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Bot, Plus, Send } from "lucide-react";
+import { Bot, Check, Copy, Plus, Send } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import formatMessageContent from "./_components/formatMessages";
+// import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 // Define Types
-type Message = {
+export type Message = {
   role: "user" | "assistant";
   content: string;
 };
@@ -22,6 +25,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isMessageLoading, setIsMessageLoading] = useState(false)
   const { user } = useUser();
 
 
@@ -41,16 +45,18 @@ export default function Home() {
     inputRef.current?.focus();
   }, []);
 
-  // const API = "http://localhost:8001";
-  const API = "http://192.168.1.2:8001";
+  const API = "http://localhost:8001";
+  // const API = "http://192.168.1.2:8001";
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    setInput("")
-
-    setIsLoading(true);
     setMessages((prev) => [...prev, { role: "user", content: input }]);
+    setInput("")
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+    setIsMessageLoading(true)
+    setIsLoading(true);
+
 
     try {
       const res = await fetch(`${API}/chat`, {
@@ -65,13 +71,14 @@ export default function Home() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
 
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+      let firstChunkReceived = false; // Track if the first chunk is received
 
       reader.read().then(function processText(
         { done, value }: ReadableStreamReadResult<Uint8Array>
       ): Promise<void> | void {
         if (done) {
           setIsLoading(false);
+
           return;
         }
 
@@ -80,10 +87,21 @@ export default function Home() {
         setMessages((prev) => {
           const lastIndex = prev.length - 1;
           const updatedMessages = [...prev];
+
+          if (!firstChunkReceived) {
+            setIsMessageLoading(false);
+            firstChunkReceived = true;
+          }
+
+          if (updatedMessages[lastIndex].content === "Thinking...") {
+            updatedMessages[lastIndex].content = "";
+          }
+
           updatedMessages[lastIndex] = {
             ...updatedMessages[lastIndex],
             content: updatedMessages[lastIndex].content + chunk,
           };
+
           return updatedMessages;
         });
 
@@ -107,6 +125,7 @@ export default function Home() {
     };
     setConversations([newConversation, ...conversations]);
   };
+
 
   return (
     <div className="flex h-screen relative text-white">
@@ -188,7 +207,7 @@ export default function Home() {
             </div>
           )}
 
-        
+
           {messages.map((message, index) => (
             <div
               key={index}
@@ -205,7 +224,14 @@ export default function Home() {
                   : 'border border-[#fff]/10 shadow-sm rounded-bl-none'
                   }`}
               >
-                <div className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</div>
+                {/* <div className="whitespace-pre-wrap text-sm sm:text-base">
+                  {message.content}
+                </div> */}
+
+
+
+                {formatMessageContent(message, isMessageLoading)}
+
 
               </div>
               {message.role === 'user' && (
