@@ -37,7 +37,7 @@ export default function RootLayout({
         <body
           className={`${openSans.className} ${merriWeather.variable}  antialiased`}
         >
-          <ClerkLoading><div className="flex justify-center bg-[#1f1f23] text-white items-center h-screen w-full">
+          <ClerkLoading><div className="flex justify-center bg-[#212121] text-white items-center h-screen w-full">
             Loading...
           </div></ClerkLoading>
           <ClerkLoaded>

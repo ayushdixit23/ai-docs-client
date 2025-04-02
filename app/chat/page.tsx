@@ -1,13 +1,10 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Bot, Check, Copy, Plus, Send } from "lucide-react";
+import { Bot, Plus, Send } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import formatMessageContent from "./_components/formatMessages";
-// import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 // Define Types
 export type Message = {
@@ -39,6 +36,7 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  // const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -58,12 +56,15 @@ export default function Home() {
     setIsLoading(true);
 
 
+    const controller = new AbortController();
+    const { signal } = controller;
+
     try {
       const res = await fetch(`${API}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input }),
-
+        signal,
       });
 
       if (!res.body) throw new Error("No response body");
@@ -108,10 +109,20 @@ export default function Home() {
         return reader.read().then(processText);
       });
     } catch (error) {
-      console.error("Error fetching streamed response:", error);
+      if ((error as DOMException).name === "AbortError") {
+        console.log("Request aborted");
+
+      } else {
+        setMessages((prev) => [
+          ...prev.filter((msg) => msg.content !== ""), // Remove empty messages
+          { content: error?.message || "Something Went Wrong!", role: "assistant" } // Add the error message
+        ]);
+        console.error("Error fetching streamed response:", error);
+      }
     } finally {
       setInput("");
       inputRef.current?.focus();
+
       setIsLoading(false);
     }
   };
@@ -126,13 +137,19 @@ export default function Home() {
     setConversations([newConversation, ...conversations]);
   };
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "40px"; // Reset height
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`; // Set height dynamically
+    }
+  }, [input]);
 
   return (
     <div className="flex h-screen relative text-white">
       {/* Sidebar */}
       <div
         className={`${isSidebarOpen ? " border-r border-[#fff]/10 w-[300px]" : " w-0"
-          } bg-[#1f1f23] text-white absolute sm:static h-full flex flex-col transition-all duration-300 ease-in-out overflow-hidden`}
+          } bg-[#171717] text-white absolute sm:static h-full flex flex-col transition-all duration-300 ease-in-out overflow-hidden`}
       >
 
         {/* New Chat Button */}
@@ -148,7 +165,7 @@ export default function Home() {
 
           <button
             onClick={startNewChat}
-            className="w-full flex items-center gap-2 px-4 py-2 bg-[#1f1f23] border border-[#fff]/10 rounded-md transition"
+            className="w-full flex items-center gap-2 px-4 py-2 bg-[#212121] border border-[#fff]/10 rounded-md transition"
           >
             <Plus size={17} />
             New chat
@@ -173,7 +190,7 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-[#1f1f23] flex flex-col h-full overflow-hidden">
+      <div className="flex-1 bg-[#212121] flex flex-col h-full overflow-hidden">
         {/* Header */}
         <header className="  border-[#fff]/10 shadow-sm py-3 px-4 border-b flex justify-between items-center">
           <div className="flex justify-center  items-center">
@@ -256,6 +273,16 @@ export default function Home() {
               placeholder="Type your message..."
               disabled={isLoading}
             />
+            {/* <textarea
+              // ref={inputRef}
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="flex-1 border rounded-md border-[#fff]/10 px-4 py-2 outline-none resize-none min-h-[40px] max-h-[200px] overflow-auto"
+              placeholder="Type your message..."
+              disabled={isLoading}
+              rows={1}
+            /> */}
             <button
               type="submit"
               className="bg-blue-500 text-white rounded-md w-10 p-2 h-10 flex items-center justify-center focus:outline-none hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
