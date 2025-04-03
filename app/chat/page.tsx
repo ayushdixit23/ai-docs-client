@@ -1,21 +1,18 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Bot, Plus, Send } from "lucide-react";
+import { Bot, Send } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import formatMessageContent from "./_components/formatMessages";
+import useAppStates from "../zustand/state";
+import Sidebar from "./_components/Sidebar";
+import { API } from "../utils/constant";
 
 // Define Types
 export type Message = {
   role: "user" | "assistant";
   content: string;
-};
-
-type Conversation = {
-  id: number;
-  title: string;
-  date: string;
 };
 
 export default function Home() {
@@ -24,16 +21,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMessageLoading, setIsMessageLoading] = useState(false)
   const { user } = useUser();
-
-
-  const [conversations, setConversations] = useState<Conversation[]>([
-    { id: 1, title: "AI capabilities and limitations", date: "Today" },
-    { id: 2, title: "Helping with coding projects", date: "Today" },
-    { id: 3, title: "Creative writing assistance", date: "Yesterday" },
-    { id: 4, title: "Research on machine learning", date: "Mar 20" },
-    { id: 5, title: "Brainstorming business ideas", date: "Mar 19" },
-  ]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const { isSidebarOpen, setIsSidebarOpen } = useAppStates((state) => state)
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   // const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -42,9 +30,6 @@ export default function Home() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
-  const API = "http://localhost:8001";
-  // const API = "http://192.168.1.2:8001";
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,10 +45,10 @@ export default function Home() {
     const { signal } = controller;
 
     try {
-      const res = await fetch(`${API}/chat`, {
+      const res = await fetch(`${API}/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ prompt: input, clerkUserId: user?.id }),
         signal,
       });
 
@@ -115,6 +100,7 @@ export default function Home() {
       } else {
         setMessages((prev) => [
           ...prev.filter((msg) => msg.content !== ""), // Remove empty messages
+          // @ts-ignore
           { content: error?.message || "Something Went Wrong!", role: "assistant" } // Add the error message
         ]);
         console.error("Error fetching streamed response:", error);
@@ -127,15 +113,6 @@ export default function Home() {
     }
   };
 
-  const startNewChat = () => {
-    setMessages([]);
-    const newConversation: Conversation = {
-      id: Date.now(),
-      title: "New conversation",
-      date: "Just now",
-    };
-    setConversations([newConversation, ...conversations]);
-  };
 
   useEffect(() => {
     if (inputRef.current) {
@@ -147,12 +124,11 @@ export default function Home() {
   return (
     <div className="flex h-screen relative text-white">
       {/* Sidebar */}
-      <div
+      {/* <div
         className={`${isSidebarOpen ? " border-r border-[#fff]/10 w-[300px]" : " w-0"
           } bg-[#171717] text-white absolute sm:static h-full flex flex-col transition-all duration-300 ease-in-out overflow-hidden`}
       >
 
-        {/* New Chat Button */}
         <div className="p-4">
 
           <button
@@ -172,7 +148,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* History */}
+   
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           <h2 className="text-xs uppercase tracking-wider text-gray-400 px-3 mb-2">
             Recent conversations
@@ -187,7 +163,8 @@ export default function Home() {
             ))}
           </ul>
         </div>
-      </div>
+      </div> */}
+      <Sidebar userId={user?.id || ""} />
 
       {/* Main Content */}
       <div className="flex-1 bg-[#212121] flex flex-col h-full overflow-hidden">
