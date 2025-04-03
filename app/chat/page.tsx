@@ -8,6 +8,7 @@ import formatMessageContent from "./_components/formatMessages";
 import useAppStates from "../zustand/state";
 import Sidebar from "./_components/Sidebar";
 import { API } from "../utils/constant";
+import axios from "axios";
 
 // Define Types
 export type Message = {
@@ -30,6 +31,14 @@ export default function Home() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    axios.get(`${API}/getMessages/67eebed7ba5c01cc0d10424f`).then((response) => {
+      setMessages(response.data.messages)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
