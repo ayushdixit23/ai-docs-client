@@ -57,13 +57,13 @@ const Sidebar = ({ userId }: { userId: string }) => {
                     Back To Chat
                 </button>
 
-                <button
-                    onClick={startNewChat}
+                <Link
+                href={"/chat"}
                     className="w-full flex items-center gap-2 px-4 py-2 bg-[#212121] border border-[#fff]/10 rounded-md transition"
                 >
                     <Plus size={17} />
                     New chat
-                </button>
+                </Link>
             </div>
 
             {/* History */}
