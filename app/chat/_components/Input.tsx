@@ -1,28 +1,27 @@
 import { API } from '@/app/utils/constant';
 import useMessages from '@/app/zustand/message';
 import useAppStates from '@/app/zustand/state';
+import axios from 'axios';
 import { Send } from 'lucide-react'
+import { useRouter } from 'next/navigation';
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 
-const Input = ({ user }: { user: any }) => {
+const Input = ({ user, chatId }: { user: any, chatId: string | undefined }) => {
     const [input, setInput] = useState<string>("");
-
     const { setMessages } = useMessages((state) => state)
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    // const [isMessageLoading, setIsMessageLoading] = useState(false)
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { setIsMessageLoading } = useAppStates((state) => state)
-
+    const router = useRouter()
 
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
 
-
     useEffect(() => {
         if (inputRef.current) {
-            inputRef.current.style.height = "40px"; // Reset height
-            inputRef.current.style.height = `${inputRef.current.scrollHeight}px`; // Set height dynamically
+            inputRef.current.style.height = "40px";
+            inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
         }
     }, [input]);
 
@@ -35,17 +34,26 @@ const Input = ({ user }: { user: any }) => {
         setIsMessageLoading(true)
         setIsLoading(true);
 
-
         const controller = new AbortController();
         const { signal } = controller;
 
+        let tempChatId = chatId
         try {
-            const res = await fetch(`${API}/generate`, {
+
+            if (!chatId) {
+                const response = await axios.post(`${API}/createChat/${user?.id}`, { title: input })
+                if (response.data.success) {
+                    tempChatId = response.data.chatId
+                }
+            }
+
+            const res = await fetch(`${API}/generate/${chatId ? chatId : tempChatId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt: input, clerkUserId: user?.id }),
+                body: JSON.stringify({ prompt: input }),
                 signal,
             });
+
 
             if (!res.body) throw new Error("No response body");
 
@@ -59,7 +67,9 @@ const Input = ({ user }: { user: any }) => {
             ): Promise<void> | void {
                 if (done) {
                     setIsLoading(false);
-
+                    if (!chatId) {
+                        router.push(`/chat/${tempChatId}`);
+                    }
                     return;
                 }
 
@@ -74,13 +84,13 @@ const Input = ({ user }: { user: any }) => {
                         firstChunkReceived = true;
                     }
 
-                    if (updatedMessages[lastIndex].content === "Thinking...") {
+                    if (updatedMessages[lastIndex]?.content === "Thinking...") {
                         updatedMessages[lastIndex].content = "";
                     }
 
                     updatedMessages[lastIndex] = {
                         ...updatedMessages[lastIndex],
-                        content: updatedMessages[lastIndex].content + chunk,
+                        content: updatedMessages[lastIndex]?.content + chunk,
                     };
 
                     return updatedMessages;
@@ -102,8 +112,7 @@ const Input = ({ user }: { user: any }) => {
             }
         } finally {
             setInput("");
-             inputRef.current?.focus();
-
+            inputRef.current?.focus();
             setIsLoading(false);
         }
     };

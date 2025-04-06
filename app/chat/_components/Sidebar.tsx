@@ -6,6 +6,7 @@ import axios from "axios"
 import { API } from '@/app/utils/constant'
 import { toast } from 'react-toastify'
 import Link from 'next/link'
+import useMessages from '@/app/zustand/message'
 
 type Conversation = {
     _id: string;
@@ -15,17 +16,13 @@ type Conversation = {
 
 const Sidebar = ({ userId }: { userId: string }) => {
     const { isSidebarOpen, setIsSidebarOpen } = useAppStates((state) => state)
-    const startNewChat = () => {
-
-    };
     const [isLoading, setIsLoading] = useState(false)
-
+    const { setMessages } = useMessages((state) => state)
     const [conversations, setConversations] = useState<Conversation[]>([]);
 
     useEffect(() => {
         setIsLoading(true)
         axios.get(`${API}/getChats/${userId}`).then((res) => {
-            console.log(res.data)
             if (res.data.success) {
                 setConversations(res.data.chats)
             } else {
@@ -34,12 +31,11 @@ const Sidebar = ({ userId }: { userId: string }) => {
 
         }).catch((err) => {
             toast.error(err.message || "Something Went Wrong!")
-            console.log(err)
         }).finally(() => {
             setIsLoading(false)
         })
 
-    },[])
+    }, [])
 
     return (
         <div
@@ -58,7 +54,10 @@ const Sidebar = ({ userId }: { userId: string }) => {
                 </button>
 
                 <Link
-                href={"/chat"}
+                    href={"/chat"}
+                    onClick={() => {
+                        setMessages([])
+                    }}
                     className="w-full flex items-center gap-2 px-4 py-2 bg-[#212121] border border-[#fff]/10 rounded-md transition"
                 >
                     <Plus size={17} />

@@ -50,12 +50,12 @@ export default function Home() {
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {!chatId && <ChatWithOutMessages />}
+                    <ChatWithOutMessages user={user}/>
 
                     {chatId && <ChatWithMessages user={user} chatId={chatId || ""} />}
                 </div>
 
-                <Input user={user} />
+                <Input user={user} chatId={chatId} />
             </div>
         </div>
     );
