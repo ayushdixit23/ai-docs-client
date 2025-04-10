@@ -7,44 +7,8 @@ import { motion } from "motion/react"
 import BlurFade from "@/components/Blurfade";
 import { NeonGradientCard } from "@/components/NeonGradientCard";
 import Image from "next/image";
-
-const HowItWorksPage: React.FC = () => {
- 
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8">
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="max-w-4xl mx-auto"
-      >
-        <motion.h1 
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-extrabold text-center text-white mb-12"
-        >
-          How It Works
-        </motion.h1>
-
-
-      </motion.div>
-    </div>
-  );
-};
-
+import HowItWorks from "@/components/HowItWorks";
+import WhyChooseUs from "@/components/WhyChooseUs";
 
 
 const page = () => {
@@ -156,7 +120,7 @@ const page = () => {
             //   firstColor: "yellow , orange",
             //   secondColor: "blue, green",
             // }}
-       
+
             neonColors={{
               firstColor: "#FF4500", // Deep Neon Orange
               secondColor: "#1E90FF", // Vivid Neon Blue
@@ -172,7 +136,8 @@ const page = () => {
         </BlurFade>
       </div>
 
-      <HowItWorksPage/>
+      <HowItWorks />
+      <WhyChooseUs/>
     </div>
   );
 };
