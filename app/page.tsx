@@ -9,6 +9,8 @@ import { NeonGradientCard } from "@/components/NeonGradientCard";
 import Image from "next/image";
 import HowItWorks from "@/components/HowItWorks";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
 
 
 const page = () => {
@@ -138,6 +140,8 @@ const page = () => {
 
       <HowItWorks />
       <WhyChooseUs/>
+      <Testimonials/>
+      <FAQ/>
     </div>
   );
 };
