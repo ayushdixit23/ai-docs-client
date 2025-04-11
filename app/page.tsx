@@ -5,6 +5,7 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import HeroSection from "@/components/HeroSection";
 import PreviewBlock from "@/components/PreviewBlock";
+import Footer from "@/components/Footer";
 
 
 const page = () => {
@@ -16,6 +17,7 @@ const page = () => {
       <WhyChooseUs />
       <Testimonials />
       <FAQ />
+      <Footer/>
     </div>
   );
 };
