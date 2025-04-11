@@ -1,3 +1,4 @@
+"use client"
 import { motion } from 'framer-motion';
 import { Link, FileSearch, Brain, Code } from 'lucide-react';
 

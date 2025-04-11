@@ -1,138 +1,194 @@
-import { useState, useEffect } from 'react';
+
+"use client";
+import React, { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import { motion } from 'motion/react';
+import Image from "next/image";
 
-type Testimonial = {
-  id: number;
-  name: string;
-  role: string;
-  company: string;
-  image: string;
-  content: string;
-};
+export default function InfiniteMovingCardsDemo() {
+  return (
+    <div className="py-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-12"
+      >
+        <h2 className="text-5xl font-extrabold py-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
+          What Developers Are Saying
+        </h2>
+        <p className="text-white">
+          Discover how engineers, teams, and tech leads are transforming their workflow with our AI-powered documentation simplifier.
+        </p>
+      </motion.div>
 
-type TestimonialCardProps = {
-  testimonial: Testimonial;
-  isActive: boolean;
-};
+      <div className="rounded-md flex flex-col antialiased items-center justify-center relative overflow-hidden">
+        <InfiniteMovingCards
+          items={testimonials}
+          direction="right"
+          speed="slow"
+        />
+      </div>
+    </div>
 
-const testimonials: Testimonial[] = [
+  );
+}
+
+const testimonials = [
   {
-    id: 1,
+    quote:
+      "This tool helped me finally understand complex React concepts. It's like having a senior developer explain things in plain English — with working code snippets included.",
     name: "Alex Chen",
-    role: "Frontend Developer",
-    company: "TechStack Inc.",
-    image: "/api/placeholder/64/64",
-    content:
-      "This tool has been a game-changer for my work. I used to spend hours trying to understand React documentation, but now I get clear, concise explanations with practical code examples instantly.",
+    title: "Frontend Developer at TechStack Inc.",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    id: 2,
+    quote:
+      "I use this for onboarding new devs on my team. Instead of throwing docs at them, I give them simplified explanations powered by your AI. Huge time-saver.",
     name: "Sarah Johnson",
-    role: "Full Stack Engineer",
-    company: "DevFlow",
-    image: "/api/placeholder/64/64",
-    content:
-      "As someone who mentors junior developers, this AI documentation simplifier has become my secret weapon. Complex technical concepts are broken down beautifully with relevant code examples.",
+    title: "Engineering Manager at DevFlow",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    id: 3,
+    quote:
+      "We integrated it into our internal tools. The ability to convert dense API documentation into digestible summaries is a game-changer for productivity.",
     name: "Miguel Santana",
-    role: "CTO",
-    company: "CodeNova",
-    image: "/api/placeholder/64/64",
-    content:
-      "We've integrated this tool into our onboarding process. New hires can now quickly get up to speed with our tech stack without getting lost in dense documentation.",
+    title: "CTO at CodeNova",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
-    id: 4,
+    quote:
+      "As a junior developer, this AI tool is like my cheat code. I actually understand what’s happening in the docs now — and I feel more confident shipping code.",
     name: "Priya Patel",
-    role: "React Developer",
-    company: "Interfaced",
-    image: "/api/placeholder/64/64",
-    content:
-      "I can't believe how much time this saves me. The AI explanations are spot-on and the code examples actually work in real-world scenarios, not just simplified demos.",
+    title: "React Developer at Interfaced",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    quote:
+      "I requested simplification for a library we use, and within a week it was supported. Super responsive team and a really smart product.",
+    name: "Liam Nguyen",
+    title: "Full Stack Developer at Launchify",
+    image: "https://randomuser.me/api/portraits/men/29.jpg",
   },
 ];
 
-const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive }) => {
-  return (
-    <motion.div
-      className={`bg-white rounded-lg shadow-lg p-6 mx-4 my-2 flex flex-col h-full ${isActive ? 'border-2 border-blue-500' : ''}`}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="flex items-center mb-4">
-        <img
-          src={testimonial.image}
-          alt={`${testimonial.name} profile`}
-          className="w-12 h-12 rounded-full mr-4"
-        />
-        <div>
-          <h3 className="font-bold text-lg">{testimonial.name}</h3>
-          <p className=" text-sm">{testimonial.role}, {testimonial.company}</p>
-        </div>
-      </div>
-      <p className=" italic flex-grow">{testimonial.content}</p>
-    </motion.div>
-  );
-};
 
-const Testimonials: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+export const InfiniteMovingCards = ({
+  items,
+  direction = "left",
+  speed = "fast",
+  pauseOnHover = true,
+  className,
+}: {
+  items: {
+    quote: string;
+    name: string;
+    title: string;
+    image:string
+  }[];
+  direction?: "left" | "right";
+  speed?: "fast" | "normal" | "slow";
+  pauseOnHover?: boolean;
+  className?: string;
+}) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const scrollerRef = React.useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    addAnimation();
   }, []);
+  const [start, setStart] = useState(false);
+  function addAnimation() {
+    if (containerRef.current && scrollerRef.current) {
+      const scrollerContent = Array.from(scrollerRef.current.children);
 
+      scrollerContent.forEach((item) => {
+        const duplicatedItem = item.cloneNode(true);
+        if (scrollerRef.current) {
+          scrollerRef.current.appendChild(duplicatedItem);
+        }
+      });
+
+      getDirection();
+      getSpeed();
+      setStart(true);
+    }
+  }
+  const getDirection = () => {
+    if (containerRef.current) {
+      if (direction === "left") {
+        containerRef.current.style.setProperty(
+          "--animation-direction",
+          "forwards",
+        );
+      } else {
+        containerRef.current.style.setProperty(
+          "--animation-direction",
+          "reverse",
+        );
+      }
+    }
+  };
+  const getSpeed = () => {
+    if (containerRef.current) {
+      if (speed === "fast") {
+        containerRef.current.style.setProperty("--animation-duration", "20s");
+      } else if (speed === "normal") {
+        containerRef.current.style.setProperty("--animation-duration", "40s");
+      } else {
+        containerRef.current.style.setProperty("--animation-duration", "80s");
+      }
+    }
+  };
   return (
-    <section className="py-16 text-white">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
-            What Our Users Say
-          </h2>
-
-          <p className=" max-w-2xl mx-auto">
-            Developers and teams are simplifying technical documentation and accelerating their learning with our AI-powered tool.
-          </p>
-        </motion.div>
-
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard
-              key={testimonial.id}
-              testimonial={testimonial}
-              isActive={testimonial.id === activeIndex + 1}
-            />
-          ))}
-        </div>
-
-        <div className="md:hidden">
-          <TestimonialCard testimonial={testimonials[activeIndex]} isActive={true} />
-          <div className="flex justify-center mt-4">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`h-3 w-3 mx-1 rounded-full ${index === activeIndex ? 'bg-blue-500' : 'bg-gray-300'
-                  }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+    <div
+      ref={containerRef}
+      className={cn(
+        "scroller relative z-20 max-w-7xl text-white/80 overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        className,
+      )}
+    >
+      <ul
+        ref={scrollerRef}
+        className={cn(
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
+          start && "animate-scroll",
+          pauseOnHover && "hover:[animation-play-state:paused]",
+        )}
+      >
+        {items.map((item, idx) => (
+          <li
+            className="relative w-[350px] max-w-full shrink-0 rounded-2xl border-[#fff]/20 border border-b-0  px-8 py-6 md:w-[450px]"
+            key={idx}
+          >
+            <blockquote>
+              <div
+                aria-hidden="true"
+                className="user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
+              ></div>
+              <span className="relative z-20 text-sm leading-[1.6] font-normal  ">
+                {item.quote}
+              </span>
+              <div className="relative z-20 mt-6 flex flex-row items-center">
+                <div>
+                  <Image src={item.image} alt={item.name} width={50} height={50}/>
+                </div>
+                <span className="flex flex-col">
+                  <span className="text-sm leading-[1.6] font-normal">
+                    {item.name}
+                  </span>
+                  <span className="text-sm leading-[1.6] font-normal">
+                    {item.title}
+                  </span>
+                </span>
+              </div>
+            </blockquote>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-export default Testimonials;
+

@@ -1,4 +1,4 @@
-// WhyChooseUs.jsx
+"use client"
 import { motion } from 'framer-motion';
 import { BookOpen, Zap, Lightbulb, Compass, Code, TrendingUp } from 'lucide-react';
 
