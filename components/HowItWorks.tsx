@@ -48,7 +48,7 @@ export default function HowItWorks() {
   };
 
   return (
-    <div className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="md:py-24 sm:py-16 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
         <div className="absolute top-20 left-10 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -69,10 +69,10 @@ export default function HowItWorks() {
           className="text-center mb-16"
         >
           
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
+          <h2 className="sm:text-4xl text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
             How It Works
           </h2>
-          <p className="text-blue-100 text-lg max-w-2xl mx-auto">
+          <p className="text-blue-100 sm:text-lg max-w-2xl mx-auto">
             Turn overwhelming documentation into clear, actionable knowledge with our AI-powered learning assistant
           </p>
         </motion.div>
@@ -99,14 +99,12 @@ export default function HowItWorks() {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300"></div>
                 {step.icon}
               </div>
-              <h3 className="text-2xl font-bold text-center mb-3 text-white group-hover:text-blue-300 transition-colors duration-300">
+              <h3 className="text-xl sm:text-2xl font-bold text-center mb-3 text-white group-hover:text-blue-300 transition-colors duration-300">
                 {step.title}
               </h3>
-              <p className="text-gray-300 text-center">
+              <p className="text-gray-300 sm:text-base text-sm text-center">
                 {step.description}
               </p>
-              
-             
             </motion.div>
           ))}
         </motion.div>

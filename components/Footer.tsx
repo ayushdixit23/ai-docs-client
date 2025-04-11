@@ -30,8 +30,6 @@ const Footer = () => {
                     </motion.div>
 
         
-
-                    {/* Social icons */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -59,7 +57,6 @@ const Footer = () => {
                     </motion.div>
                 </div>
 
-                {/* Bottom section with copyright */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

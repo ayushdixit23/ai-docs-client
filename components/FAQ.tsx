@@ -61,7 +61,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ faq, isOpen, toggleOpen }) => {
         onClick={toggleOpen}
         aria-expanded={isOpen}
       >
-        <span className="text-lg">{faq.question}</span>
+        <span className="sm:text-lg">{faq.question}</span>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
@@ -108,18 +108,18 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-16 text-white/80">
+    <section className="py-8 sm:py-16 text-white/80">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-6 sm:mb-12"
         >
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
+          <h2 className="sm:text-4xl text-3xl py-3 md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-white">
+          <p className="text-white sm:text-base  text-sm">
             Everything you need to know about our AI documentation simplifier
           </p>
         </motion.div>
@@ -128,7 +128,7 @@ const FAQ: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className=" rounded-lg p-6"
+          className=" rounded-lg p-3 sm:p-6"
         >
           {faqs.map((faq) => (
             <FAQItem
@@ -139,8 +139,6 @@ const FAQ: React.FC = () => {
             />
           ))}
         </motion.div>
-
-
       </div>
     </section>
   );

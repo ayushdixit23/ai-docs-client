@@ -7,17 +7,17 @@ import Image from "next/image";
 
 export default function InfiniteMovingCardsDemo() {
   return (
-    <div className="py-16">
+    <div className="py-10 sm:py-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h2 className="text-5xl font-extrabold py-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
+        <h2 className="sm:text-4xl text-3xl md:text-5xl font-extrabold py-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
           What Developers Are Saying
         </h2>
-        <p className="text-white">
+        <p className="text-white text-sm sm:text-base">
           Discover how engineers, teams, and tech leads are transforming their workflow with our AI-powered documentation simplifier.
         </p>
       </motion.div>
