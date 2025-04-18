@@ -1,5 +1,5 @@
 import useAppStates from '@/app/zustand/state'
-import { Plus } from 'lucide-react'
+import { MoreVertical, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import axios from "axios"
@@ -7,11 +7,13 @@ import { API } from '@/app/utils/constant'
 import { toast } from 'react-toastify'
 import Link from 'next/link'
 import useMessages from '@/app/zustand/message'
+import ChatsHistory from './ChatsHistory'
 
-type Conversation = {
+export type Conversation = {
     _id: string;
     title: string;
     createdAt: string;
+    _originalIndex?: number;
 };
 
 const Sidebar = ({ userId }: { userId: string }) => {
@@ -72,11 +74,7 @@ const Sidebar = ({ userId }: { userId: string }) => {
                 </h2>
                 <ul className="space-y-1">
                     {conversations.map((convo) => (
-                        <Link href={`/chat/${convo._id}`} key={convo._id}>
-                            <button className="w-full text-left px-4 py-2 rounded-md truncate text-[15px] divide-y">
-                                {convo.title}
-                            </button>
-                        </Link>
+                        <ChatsHistory key={convo._id} convo={convo} setConversations={setConversations} />
                     ))}
                 </ul>
             </div>
