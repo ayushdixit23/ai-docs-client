@@ -1,6 +1,6 @@
 import useAppStates from '@/app/zustand/state'
 import { MoreVertical, Plus } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import axios from "axios"
 import { API } from '@/app/utils/constant'
@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import Link from 'next/link'
 import useMessages from '@/app/zustand/message'
 import ChatsHistory from './ChatsHistory'
-
+import useIsMobile from '@/app/hooks/useIsMobile'
 export type Conversation = {
     _id: string;
     title: string;
@@ -21,6 +21,8 @@ const Sidebar = ({ userId }: { userId: string }) => {
     const [isLoading, setIsLoading] = useState(false)
     const { setMessages } = useMessages((state) => state)
     const [conversations, setConversations] = useState<Conversation[]>([]);
+    const isMobile = useIsMobile()
+    const [hasMounted, setHasMounted] = useState(false)
 
     useEffect(() => {
         setIsLoading(true)
@@ -38,6 +40,13 @@ const Sidebar = ({ userId }: { userId: string }) => {
         })
 
     }, [])
+
+    useLayoutEffect(() => {
+        setIsSidebarOpen(!isMobile)
+        setHasMounted(true)
+    }, [isMobile])
+
+    if (!hasMounted) return null;
 
     return (
         <div
@@ -59,6 +68,9 @@ const Sidebar = ({ userId }: { userId: string }) => {
                     href={"/chat"}
                     onClick={() => {
                         setMessages([])
+                        if (isMobile) {
+                            setIsSidebarOpen(false)
+                        }
                     }}
                     className="w-full flex items-center gap-2 px-4 py-2 bg-[#212121] border border-[#fff]/10 rounded-md transition"
                 >

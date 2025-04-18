@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Conversation } from './Sidebar'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import DeleteChatHistoryModal from './DeleteChatHistoryModals'
 import { API } from '@/app/utils/constant'
 import { useUser } from '@clerk/nextjs'
@@ -76,12 +76,13 @@ const ChatsHistory = ({ convo, setConversations }: { convo: Conversation, setCon
             if (res.data.success) {
                 toast.success('Chat title updated successfully')
             } else {
-                toast.error('Failed to update chat title')
+                toast.error(res.data.message || 'Failed to update chat title')
                 setTitle(convo.title)
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.log(error)
-            toast.error('Failed to update chat title')
+            const axiosError = error as AxiosError<any>
+            toast.error(axiosError?.response?.data?.message || 'Failed to update chat title')
             setTitle(convo.title)
         }
     }

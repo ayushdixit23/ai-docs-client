@@ -29,7 +29,7 @@ export default function Home() {
     }
 
     return (
-        <div className="flex h-screen relative text-white">
+        <div className="flex h-dvh sm:h-screen relative text-white">
 
             <Sidebar userId={user?.id || ""} />
             <div className="flex-1 bg-[#212121] flex flex-col h-full overflow-hidden">
