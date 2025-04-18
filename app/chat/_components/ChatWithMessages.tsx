@@ -1,25 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import axios from 'axios';
-import { API } from '@/app/utils/constant';
 import useMessages from '@/app/zustand/message';
 import useAppStates from '@/app/zustand/state';
 import Messages from './Messages';
 
 
 const ChatWithMessages = ({ user, chatId }: { user: any, chatId: string }) => {
-    const { messages, setMessages } = useMessages((state) => state)
+    const { messages } = useMessages((state) => state)
     const { isMessageLoading } = useAppStates((state) => state)
     const scrollRef = useRef(null);
     const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
-
-    useEffect(() => {
-        axios.get(`${API}/getMessages/${chatId}`).then((response) => {
-            setMessages(response.data.messages)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [])
-
 
     useEffect(() => {
         if (!hasScrolledOnce && messages.length > 0) {
@@ -35,7 +24,7 @@ const ChatWithMessages = ({ user, chatId }: { user: any, chatId: string }) => {
         <>
             <div id="individualMessages"
                 ref={scrollRef}
-                style={{ height: "100%", overflowY: "scroll", display: "flex",gap:"20px", flexDirection: "column" ,width:"100%" }}>
+                style={{ height: "100%", overflowY: "scroll", display: "flex", gap: "20px", flexDirection: "column", width: "100%" }}>
                 {messages.map((message, index) => (
                     <Messages message={message} key={index} isMessageLoading={isMessageLoading} user={user} />
                 ))}

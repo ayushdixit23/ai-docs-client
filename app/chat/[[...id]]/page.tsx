@@ -8,8 +8,11 @@ import NotFound from "./non-found";
 import ChatWithMessages from "../_components/ChatWithMessages";
 import ChatWithOutMessages from "../_components/ChatWithOutMessages";
 import Input from "../_components/Input";
+import axios from "axios";
+import { API } from "@/app/utils/constant";
+import { useEffect, useState } from "react";
+import useMessages from "@/app/zustand/message";
 
-// Define Types
 export type Message = {
     role: "user" | "assistant";
     content: string;
@@ -18,13 +21,33 @@ export type Message = {
 export default function Home() {
     const { user } = useUser();
     const { isSidebarOpen, setIsSidebarOpen } = useAppStates((state) => state)
+    const { setMessages } = useMessages((state) => state)
     const params = useParams()
     const { id: arrId } = params
     const chatId = arrId && arrId[0]
+    const [isValidChat, setIsValidChat] = useState(true)
 
-    if (arrId && arrId?.length > 1) {
+    useEffect(() => {
+        if (chatId) {
+            axios.get(`${API}/getMessages/${chatId}`).then((response) => {
+                console.log(response.data)
+                if (response.data.isValid) {
+                    setIsValidChat(true)
+                    setMessages(response.data.messages)
+                } else {
+                    setIsValidChat(false)
+                }
+            }).catch((err) => {
+                if (err.response.status === 400) {
+                    setIsValidChat(false)
+                }
+            })
+        }
+    }, [chatId])
+
+    if ((arrId && arrId?.length > 1) || !isValidChat) {
         return <>
-            <NotFound />
+            <NotFound setIsValidChat={setIsValidChat} />
         </>
     }
 
@@ -50,7 +73,7 @@ export default function Home() {
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <ChatWithOutMessages user={user}/>
+                    <ChatWithOutMessages user={user} />
 
                     {chatId && <ChatWithMessages user={user} chatId={chatId || ""} />}
                 </div>

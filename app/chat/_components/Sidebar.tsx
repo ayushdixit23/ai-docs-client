@@ -1,5 +1,5 @@
 import useAppStates from '@/app/zustand/state'
-import { MoreVertical, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import axios from "axios"
@@ -9,6 +9,7 @@ import Link from 'next/link'
 import useMessages from '@/app/zustand/message'
 import ChatsHistory from './ChatsHistory'
 import useIsMobile from '@/app/hooks/useIsMobile'
+
 export type Conversation = {
     _id: string;
     title: string;
@@ -18,14 +19,12 @@ export type Conversation = {
 
 const Sidebar = ({ userId }: { userId: string }) => {
     const { isSidebarOpen, setIsSidebarOpen } = useAppStates((state) => state)
-    const [isLoading, setIsLoading] = useState(false)
     const { setMessages } = useMessages((state) => state)
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const isMobile = useIsMobile()
     const [hasMounted, setHasMounted] = useState(false)
 
     useEffect(() => {
-        setIsLoading(true)
         axios.get(`${API}/getChats/${userId}`).then((res) => {
             if (res.data.success) {
                 setConversations(res.data.chats)
@@ -35,10 +34,7 @@ const Sidebar = ({ userId }: { userId: string }) => {
 
         }).catch((err) => {
             toast.error(err.message || "Something Went Wrong!")
-        }).finally(() => {
-            setIsLoading(false)
         })
-
     }, [])
 
     useLayoutEffect(() => {

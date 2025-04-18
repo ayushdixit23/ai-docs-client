@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function NotFound() {
+export default function NotFound({ setIsValidChat }: { setIsValidChat: (isValidChat: boolean) => void }) {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-black/90 text-white px-4 text-center">
             <div className="max-w-md w-full p-8 bg-[#212121] rounded-lg shadow-lg">
@@ -11,8 +11,12 @@ export default function NotFound() {
                 </p>
                 <Link
                     href="/chat"
+                    onClick={() => {
+                        setIsValidChat(true)
+                    }}
                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
                 >
+
                     Return Home
                 </Link>
             </div>
