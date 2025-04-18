@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash, Trash2 } from "lucide-react";
 
-export default function DeleteChatHistoryModal({ onConfirm }: { onConfirm: () => void }) {
+export default function DeleteChatHistoryModal({ onConfirm, setShowDropdown }: { onConfirm: () => void, setShowDropdown: (show: boolean) => void }) {
   return (
     <AlertDialog >
       <AlertDialogTrigger asChild>
         <button
-          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-red-500"
+          className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm text-left text-red-500"
         >
           <Trash className="w-3 h-3" />
           Delete
@@ -40,7 +40,11 @@ export default function DeleteChatHistoryModal({ onConfirm }: { onConfirm: () =>
           </AlertDialogHeader>
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-white bg-[#212121] hover:bg-[#212121]/80 hover:text-none border border-[#fff]/10">Cancel</AlertDialogCancel>
+          <AlertDialogCancel 
+            onClick={() => {
+              setShowDropdown(false)
+            }}
+            className="text-white bg-[#212121] hover:bg-[#212121]/80 hover:text-none border border-[#fff]/10">Cancel</AlertDialogCancel>
           <AlertDialogAction
             asChild
             className="bg-red-600 hover:bg-red-500 text-white"
