@@ -17,7 +17,7 @@ const page = () => {
       <WhyChooseUs />
       <Testimonials />
       <FAQ />
-      <Footer/>
+      <Footer />
     </div>
   );
 };
