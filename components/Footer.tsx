@@ -1,19 +1,54 @@
 "use client"
 import Link from 'next/link';
 import { motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const [isVisible, setIsVisible] = useState(false);
+    const componentRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.unobserve(entry.target);
+                }
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            }
+        );
+
+        if (componentRef.current) {
+            observer.observe(componentRef.current);
+        }
+
+        return () => {
+            if (componentRef.current) {
+                observer.unobserve(componentRef.current);
+            }
+        };
+    }, []);
 
     return (
-        <footer className=" text-gray-300 border-t border-gray-800">
+        <motion.footer 
+            ref={componentRef}
+            initial={{ opacity: 0, y: 50 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="text-gray-300 border-t border-gray-800"
+        >
             <div className="container mx-auto px-4 py-12">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     {/* Logo and tagline */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
+                        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                         className="mb-8 md:mb-0"
                     >
                         <div className="flex items-center">
@@ -29,11 +64,10 @@ const Footer = () => {
                         <p className="mt-2 text-sm text-gray-400">Making technical docs human-friendly</p>
                     </motion.div>
 
-        
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
+                        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
                         className="flex gap-4"
                     >
                         <a href="https://x.com/ayushdixitdev" target='_blank' className="text-gray-400 hover:text-white transition-colors duration-300">
@@ -59,8 +93,8 @@ const Footer = () => {
 
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
+                    animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
                     className="pt-8 mt-8 border-t border-gray-800 text-sm text-center text-gray-400"
                 >
                     <div className="flex flex-col md:flex-row justify-between items-center">
@@ -77,9 +111,7 @@ const Footer = () => {
                     </div>
                 </motion.div>
             </div>
-
-         
-        </footer>
+        </motion.footer>
     );
 };
 
