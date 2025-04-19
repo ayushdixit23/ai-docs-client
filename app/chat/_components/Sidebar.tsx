@@ -76,7 +76,7 @@ const Sidebar = ({ userId }: { userId: string }) => {
             </div>
 
             {/* History */}
-            <div className="flex-1 overflow-y-auto px-2 pb-4">
+            {conversations.length > 0 && <div className="flex-1 mt-2 overflow-y-auto px-2 pb-4">
                 <h2 className="text-xs uppercase tracking-wider text-gray-400 px-3 mb-2">
                     Recent conversations
                 </h2>
@@ -85,7 +85,7 @@ const Sidebar = ({ userId }: { userId: string }) => {
                         <ChatsHistory key={convo._id} convo={convo} setConversations={setConversations} />
                     ))}
                 </ul>
-            </div>
+            </div>}
         </div>
     )
 }

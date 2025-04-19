@@ -10,7 +10,8 @@ const Input = ({ user, chatId }: { user: any, chatId: string | undefined }) => {
     const [input, setInput] = useState<string>("");
     const { setMessages } = useMessages((state) => state)
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const inputRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLTextAreaElement | null>(null);
+    // const inputRef = useRef<HTMLInputElement | null>(null);
     const { setIsMessageLoading } = useAppStates((state) => state)
     const router = useRouter()
 
@@ -120,7 +121,7 @@ const Input = ({ user, chatId }: { user: any, chatId: string | undefined }) => {
     return (
         <div className="border-t border-y border-[#fff]/10 p-4">
             <form onSubmit={handleSubmit} className="flex space-x-2">
-                <input
+                {/* <input
                     ref={inputRef}
                     type="text"
                     value={input}
@@ -128,17 +129,22 @@ const Input = ({ user, chatId }: { user: any, chatId: string | undefined }) => {
                     className="flex-1 border rounded-md border-[#fff]/10 px-4 py-2 outline-none "
                     placeholder="Type your message..."
                     disabled={isLoading}
-                />
-                {/* <textarea
-                    // ref={inputRef}
+                /> */}
+                <textarea
                     ref={inputRef}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                        }
+                    }}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 border rounded-md border-[#fff]/10 px-4 py-2 outline-none resize-none min-h-[40px] max-h-[200px] overflow-auto"
                     placeholder="Type your message..."
                     disabled={isLoading}
                     rows={1}
-                /> */}
+                />
                 <button
                     type="submit"
                     className="bg-blue-500 text-white rounded-md w-10 p-2 h-10 flex items-center justify-center focus:outline-none hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
