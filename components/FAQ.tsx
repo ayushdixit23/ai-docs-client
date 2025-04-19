@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 type FAQ = {
@@ -57,7 +57,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ faq, isOpen, toggleOpen }) => {
   return (
     <div className="border-b border-gray-200 py-4">
       <button
-        className="flex justify-between items-center w-full text-left font-medium  focus:outline-none"
+        className="flex justify-between items-center w-full text-left font-medium focus:outline-none"
         onClick={toggleOpen}
         aria-expanded={isOpen}
       >
@@ -68,7 +68,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ faq, isOpen, toggleOpen }) => {
           className="ml-6 flex-shrink-0"
         >
           <svg
-            className="h-6 w-6 "
+            className="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -92,7 +92,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ faq, isOpen, toggleOpen }) => {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="pt-4 pb-2 ">{faq.answer}</div>
+            <div className="pt-4 pb-2">{faq.answer}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -102,45 +102,90 @@ const FAQItem: React.FC<FAQItemProps> = ({ faq, isOpen, toggleOpen }) => {
 
 const FAQ: React.FC = () => {
   const [openId, setOpenId] = useState<number | null>(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const componentRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        // This threshold means the animation triggers when 10% of the element is visible
+        threshold: 0.1,
+        // You can add rootMargin to trigger the animation slightly before the element is in view
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    if (componentRef.current) {
+      observer.observe(componentRef.current);
+    }
+
+    return () => {
+      if (componentRef.current) {
+        observer.unobserve(componentRef.current);
+      }
+    };
+  }, []);
 
   const toggleFaq = (id: number) => {
     setOpenId(openId === id ? null : id);
   };
 
   return (
-    <section className="py-8 sm:py-16 text-white/80">
+    <motion.section 
+      ref={componentRef}
+      initial={{ opacity: 0, y: 80 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 80 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="py-8 sm:py-16 text-white/80"
+    >
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="text-center mb-6 sm:mb-12"
         >
           <h2 className="sm:text-4xl text-3xl py-3 md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-white sm:text-base  text-sm">
+          <p className="text-white sm:text-base text-sm">
             Everything you need to know about our AI documentation simplifier
           </p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className=" rounded-lg p-3 sm:p-6"
+          animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="rounded-lg p-3 sm:p-6"
         >
-          {faqs.map((faq) => (
-            <FAQItem
+          {faqs.map((faq, index) => (
+            <motion.div
               key={faq.id}
-              faq={faq}
-              isOpen={openId === faq.id}
-              toggleOpen={() => toggleFaq(faq.id)}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ 
+                duration: 0.5, 
+                delay: 0.6 + (index * 0.1) // Stagger the appearance of each FAQ item
+              }}
+            >
+              <FAQItem
+                faq={faq}
+                isOpen={openId === faq.id}
+                toggleOpen={() => toggleFaq(faq.id)}
+              />
+            </motion.div>
           ))}
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,20 +1,54 @@
-
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from 'motion/react';
 import Image from "next/image";
 
 export default function InfiniteMovingCardsDemo() {
+  const [isVisible, setIsVisible] = useState(false);
+  const componentRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    if (componentRef.current) {
+      observer.observe(componentRef.current);
+    }
+
+    return () => {
+      if (componentRef.current) {
+        observer.unobserve(componentRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="py-10 sm:py-16">
+    <motion.div 
+      ref={componentRef}
+      initial={{ opacity: 0, y: 80 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 80 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="py-10 sm:py-16"
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
         className="text-center mb-12"
       >
-        <h2 className="sm:text-4xl text-3xl md:text-5xl font-extrabold py-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300  mb-4">
+        <h2 className="sm:text-4xl text-3xl md:text-5xl font-extrabold py-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 mb-4">
           What Developers Are Saying
         </h2>
         <p className="text-white text-sm sm:text-base">
@@ -22,15 +56,19 @@ export default function InfiniteMovingCardsDemo() {
         </p>
       </motion.div>
 
-      <div className="rounded-md flex flex-col antialiased items-center justify-center relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.7, delay: 0.5 }}
+        className="rounded-md flex flex-col antialiased items-center justify-center relative overflow-hidden"
+      >
         <InfiniteMovingCards
           items={testimonials}
           direction="right"
           speed="slow"
         />
-      </div>
-    </div>
-
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -58,7 +96,7 @@ const testimonials = [
   },
   {
     quote:
-      "As a junior developer, this AI tool is like my cheat code. I actually understand what’s happening in the docs now — and I feel more confident shipping code.",
+      "As a junior developer, this AI tool is like my cheat code. I actually understand what's happening in the docs now — and I feel more confident shipping code.",
     name: "Priya Patel",
     title: "React Developer at Interfaced",
     image: "https://randomuser.me/api/portraits/women/68.jpg",
@@ -72,8 +110,6 @@ const testimonials = [
   },
 ];
 
-
-
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -85,7 +121,7 @@ export const InfiniteMovingCards = ({
     quote: string;
     name: string;
     title: string;
-    image:string
+    image: string
   }[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
@@ -159,7 +195,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[350px] max-w-full shrink-0 rounded-2xl border-[#fff]/20 border border-b-0  px-8 py-6 md:w-[450px]"
+            className="relative w-[350px] max-w-full shrink-0 rounded-2xl border-[#fff]/20 border border-b-0 px-8 py-6 md:w-[450px]"
             key={idx}
           >
             <blockquote>
@@ -167,7 +203,7 @@ export const InfiniteMovingCards = ({
                 aria-hidden="true"
                 className="user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
-              <span className="relative z-20 text-sm leading-[1.6] font-normal  ">
+              <span className="relative z-20 text-sm leading-[1.6] font-normal">
                 {item.quote}
               </span>
               <div className="relative z-20 mt-6 gap-2 flex flex-row items-center">
@@ -190,5 +226,3 @@ export const InfiniteMovingCards = ({
     </div>
   );
 };
-
-
