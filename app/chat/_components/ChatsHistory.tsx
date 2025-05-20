@@ -168,21 +168,15 @@ const ChatsHistory = ({
           </button>
 
           {showDropdown && (
-            <div className="absolute right-7 top-7 bg-[#212121] rounded-md shadow-lg py-1 z-20 w-32">
+            <div className="absolute right-7 top-7 bg-[#212121]  rounded-md shadow-lg py-1 px-1 z-20 w-32">
               <button
-                className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm text-left text-gray-200"
+                className="flex items-center cursor-pointer gap-2 hover:bg-white/20 rounded-md w-full px-3  py-2 text-sm text-left text-gray-200"
                 onClick={handleEdit}
               >
                 <Edit className="w-3 h-3" />
                 Edit
               </button>
-              {/* <button
-                className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm text-left text-gray-200"
-                onClick={handleShare}
-              >
-                <Share className="w-3 h-3" />
-                Share
-              </button> */}
+          
               <DeleteChatHistoryModal
                 onConfirm={handleDelete}
                 setShowDropdown={setShowDropdown}

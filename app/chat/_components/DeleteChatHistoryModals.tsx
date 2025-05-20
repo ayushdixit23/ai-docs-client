@@ -16,7 +16,7 @@ export default function DeleteChatHistoryModal({ onConfirm, setShowDropdown }: {
     <AlertDialog >
       <AlertDialogTrigger asChild>
         <button
-          className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm text-left text-red-500"
+          className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm text-left hover:bg-red-600 rounded-md hover:text-white text-red-500"
         >
           <Trash className="w-3 h-3" />
           Delete
