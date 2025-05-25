@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect,useState } from 'react'
 import useMessages from '@/app/zustand/message';
 import useAppStates from '@/app/zustand/state';
 import Messages from './Messages';
@@ -6,11 +6,9 @@ import Messages from './Messages';
 
 const ChatWithMessages = ({
     user,
-    chatId,
     scrollRef,
 }: {
     user: any;
-    chatId: string;
     scrollRef: React.RefObject<HTMLDivElement | null>;
 
 }) => {

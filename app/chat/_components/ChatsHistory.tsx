@@ -1,4 +1,4 @@
-import { MoreVertical, Edit, Share, Trash } from "lucide-react";
+import { MoreVertical, Edit } from "lucide-react";
 import React, { useState } from "react";
 import { Conversation } from "./Sidebar";
 import Link from "next/link";
@@ -27,11 +27,6 @@ const ChatsHistory = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-    setShowDropdown(false);
-  };
-
-  const handleShare = () => {
-    console.log("Share chat:", convo._id);
     setShowDropdown(false);
   };
 
@@ -64,7 +59,6 @@ const ChatsHistory = ({
         toast.error("Failed to delete chat");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Failed to delete chat");
 
       setConversations((prev) => {
@@ -91,7 +85,6 @@ const ChatsHistory = ({
         setTitle(convo.title);
       }
     } catch (error: unknown) {
-      console.log(error);
       const axiosError = error as AxiosError<any>;
       toast.error(
         axiosError?.response?.data?.message || "Failed to update chat title"

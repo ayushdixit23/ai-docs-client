@@ -7,7 +7,6 @@ import HeroSection from "@/components/HeroSection";
 import PreviewBlock from "@/components/PreviewBlock";
 import Footer from "@/components/Footer";
 
-
 const page = () => {
   return (
     <div className="bg-custom-gradient">

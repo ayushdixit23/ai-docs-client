@@ -87,12 +87,10 @@ export default function Home() {
           {chatId && (
             <ChatWithMessages
               user={user}
-              chatId={chatId || ""}
               scrollRef={scrollRef}
             />
           )}
         </div>
-
         <Input user={user} chatId={chatId} scrollToBottom={scrollToBottom} />
       </div>
     </div>

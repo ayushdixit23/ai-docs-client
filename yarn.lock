@@ -770,18 +770,6 @@
     postcss "^8.4.41"
     tailwindcss "4.0.15"
 
-"@tanstack/query-core@5.71.5":
-  version "5.71.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.71.5.tgz#bb373ffca396fa70edb0bc9ef5722add6ba6f0b9"
-  integrity sha512-XOQ5SyjCdwhxyLksGKWSL5poqyEXYPDnsrZAzJm2LgrMm4Yh6VOrfC+IFosXreDw9HNqC11YAMY3HlfHjNzuaA==
-
-"@tanstack/react-query@^5.71.5":
-  version "5.71.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.71.5.tgz#1018f083945ba5e2b91997eec9b9c767efce1e1b"
-  integrity sha512-WpxZWy4fDASjY+iAaXB+aY+LC95PQ34W6EWVkjJ0hdzWWbczFnr9nHvHkVDpwdR18I1NO8igNGQJFrLrgyzI8Q==
-  dependencies:
-    "@tanstack/query-core" "5.71.5"
-
 "@types/hast@^2.0.0":
   version "2.3.10"
   resolved "https://registry.yarnpkg.com/@types/hast/-/hast-2.3.10.tgz#5c9d9e0b304bbb8879b857225c5ebab2d81d7643"
@@ -1139,11 +1127,6 @@ highlight.js@^10.4.1, highlight.js@~10.7.0:
   version "10.7.3"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
   integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
-
-highlight.js@^11.11.1:
-  version "11.11.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.11.1.tgz#fca06fa0e5aeecf6c4d437239135fabc15213585"
-  integrity sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==
 
 highlightjs-vue@^1.0.0:
   version "1.0.0"

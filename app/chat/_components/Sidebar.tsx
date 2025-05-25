@@ -29,7 +29,7 @@ const Sidebar = ({ userId }: { userId: string }) => {
             if (res.data.success) {
                 setConversations(res.data.chats)
             } else {
-                toast.error(res.data.message || "Something Went Wrong!")
+                toast.error(res.data.message || "Something Went Wrong While Fetching Chats!")
             }
 
         }).catch((err) => {
