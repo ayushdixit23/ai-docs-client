@@ -4,10 +4,18 @@ import useAppStates from '@/app/zustand/state';
 import Messages from './Messages';
 
 
-const ChatWithMessages = ({ user, chatId }: { user: any, chatId: string }) => {
+const ChatWithMessages = ({
+    user,
+    chatId,
+    scrollRef,
+}: {
+    user: any;
+    chatId: string;
+    scrollRef: React.RefObject<HTMLDivElement | null>;
+
+}) => {
     const { messages } = useMessages((state) => state)
     const { isMessageLoading } = useAppStates((state) => state)
-    const scrollRef = useRef(null);
     const [hasScrolledOnce, setHasScrolledOnce] = useState(false);
 
     useEffect(() => {
@@ -20,6 +28,7 @@ const ChatWithMessages = ({ user, chatId }: { user: any, chatId: string }) => {
         }
     }, [messages, hasScrolledOnce]);
 
+
     return (
         <>
             <div id="individualMessages"
@@ -29,7 +38,6 @@ const ChatWithMessages = ({ user, chatId }: { user: any, chatId: string }) => {
                     <Messages message={message} key={index} isMessageLoading={isMessageLoading} user={user} />
                 ))}
             </div>
-
         </>
 
     )
