@@ -13,18 +13,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "react-toastify";
 
 export function PromptSelection({
+  queryType,
   setQueryType,
 }: {
+  queryType: string;
   setQueryType: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <Select onValueChange={setQueryType} defaultValue="general">
+    <Select value={queryType} onValueChange={setQueryType} defaultValue="general">
       <SelectTrigger className="sm:w-[180px] w-full border border-[#fff]/10">
         <SelectValue placeholder="Query Type" />
       </SelectTrigger>
-      <SelectContent className="bg-transparent text-white border border-[#fff]/40 hover:bg-none">
+      <SelectContent className="bg-black/50 text-white border border-[#fff]/40 hover:bg-none">
         <SelectGroup>
           <SelectItem value="general">General Questions</SelectItem>
           <SelectItem value="docs">Simplify Docs</SelectItem>
@@ -87,14 +90,20 @@ const Input = ({
         }
       }
 
+      const endpoint =
+        queryType === "general"
+          ? `/followUpOrStandAlone/${chatId ? chatId : tempChatId}`
+          : `/getDocsScrapeData/${chatId ? chatId : tempChatId}`;
+
       const res = await fetch(
-        `${API}/generate/${chatId ? chatId : tempChatId}`,
+        `${API}${endpoint}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: input }),
         }
       );
+
 
       if (!res.body) throw new Error("No response body");
 
@@ -142,6 +151,7 @@ const Input = ({
 
           return reader.read().then(processText);
         });
+
     } catch (error) {
       if ((error as DOMException).name === "AbortError") {
         console.log("Request aborted");
@@ -156,6 +166,9 @@ const Input = ({
       }
     } finally {
       setInput("");
+      if (queryType === "docs") {
+        setQueryType("general");
+      }
       inputRef.current?.focus();
       setIsLoading(false);
     }
@@ -163,7 +176,7 @@ const Input = ({
 
   return (
     <div className="border-t border-y flex flex-col sm:flex-row w-ful gap-2 border-[#fff]/10 p-3">
-      <PromptSelection setQueryType={setQueryType} />
+      <PromptSelection queryType={queryType} setQueryType={setQueryType} />
       <form onSubmit={handleSubmit} className="flex w-full space-x-2">
         <textarea
           ref={inputRef}

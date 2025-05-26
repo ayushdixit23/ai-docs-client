@@ -25,17 +25,19 @@ const Sidebar = ({ userId }: { userId: string }) => {
     const [hasMounted, setHasMounted] = useState(false)
 
     useEffect(() => {
-        axios.get(`${API}/getChats/${userId}`).then((res) => {
-            if (res.data.success) {
-                setConversations(res.data.chats)
-            } else {
-                toast.error(res.data.message || "Something Went Wrong While Fetching Chats!")
-            }
+        if (userId) {
+            axios.get(`${API}/getChats/${userId}`).then((res) => {
+                if (res.data.success) {
+                    setConversations(res.data.chats)
+                } else {
+                    toast.error(res.data.message || "Something Went Wrong While Fetching Chats!")
+                }
 
-        }).catch((err) => {
-            toast.error(err.message || "Something Went Wrong!")
-        })
-    }, [])
+            }).catch((err) => {
+                toast.error(err.message || "Something Went Wrong!")
+            })
+        }
+    }, [userId])
 
     useLayoutEffect(() => {
         setIsSidebarOpen(!isMobile)
