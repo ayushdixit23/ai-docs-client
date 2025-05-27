@@ -131,7 +131,6 @@ const Input = ({
     }
   };
 
-
   const handleUrlSubmit = async (input: string) => {
     if (!input.trim() || isLoading) return;
     setMessages({ role: "user", content: input });
