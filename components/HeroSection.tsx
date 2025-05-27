@@ -41,16 +41,6 @@ const HeroSection = () => {
                                 <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
                             </button>
                         </div>
-
-                        {/* <motion.h1
-              initial={{ opacity: 0, scale: 0.75 }}
-              animate={{ opacity: 1, scale: 1}}
-              transition={{
-                ease: "easeInOut",
-                duration: .5
-              }} 
-                 className="leading-snug text-white/70 sm:text-4xl text-3xl md:text-7xl font-bold">
-               */}
                         <motion.h1
                             initial={{ opacity: 0, scale: 0.75, y: 15 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -66,9 +56,6 @@ const HeroSection = () => {
                         >
                             Simplify Your Docs Easily with AI
                         </motion.h1>
-                        {/* <p className="text-[#a1a1aa] sm:leading-8 sm:text-lg text-sm md:text-xl font-semibold">
-              Designed to simplify technical docs (like React, Nextjs and more) using AI, making them easier to understand with simple words, clear examples, and better explanations.
-            </p> */}
 
                         <motion.p
                             initial={{ opacity: 0, scale: 0.9, y: 15 }}

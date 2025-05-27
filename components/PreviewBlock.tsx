@@ -1,31 +1,35 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useRef } from 'react'
 import BlurFade from './Blurfade'
 import { NeonGradientCard } from './NeonGradientCard'
-import Image from 'next/image'
 
 const PreviewBlock = () => {
+    const vidRef=useRef(null);
+
+    useEffect(() => { 
+        if(!vidRef.current) return;
+        // @ts-ignore
+        vidRef.current?.play()
+         },[]);
     return (
         <div className="px-4 pb-14 mt-6">
             <BlurFade delay={0.25 * 5}>
                 <NeonGradientCard
                     className="max-w-[1280px] mx-auto"
                     borderSize={1}
-                    // neonColors={{
-                    //   firstColor: "yellow , orange",
-                    //   secondColor: "blue, green",
-                    // }}
 
                     neonColors={{
-                        firstColor: "#FF4500", // Deep Neon Orange
-                        secondColor: "#1E90FF", // Vivid Neon Blue
+                        firstColor: "#FF4500",
+                        secondColor: "#1E90FF",
                     }}
                 >
-                    <Image
-                        src={"/code.jpeg"}
-                        alt="Image"
-                        width={1920}
-                        height={1080}
-                    ></Image>
+                    <video
+                    ref={ vidRef }
+                        className='w-full h-full object-cover rounded-lg'
+                        autoPlay
+                        loop
+                        muted
+                        src='/video.mp4' />
                 </NeonGradientCard>
             </BlurFade>
         </div>

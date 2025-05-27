@@ -5,6 +5,7 @@ import { dark } from "@clerk/themes";
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import NextTopLoader from 'nextjs-toploader';
 import { ToastContainer } from "react-toastify";
+import { Analytics } from "@vercel/analytics/next"
 
 const merriWeather = Merriweather({
   subsets: ["latin"],
@@ -15,7 +16,7 @@ const merriWeather = Merriweather({
 
 const openSans = Open_Sans({
   subsets: ["latin"],
-  weight: ["400", "600"], // Regular and semi-bold weights for body text
+  weight: ["400", "600"],
   style: "normal",
 });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
         <body
           className={`${openSans.className} ${merriWeather.variable}  antialiased`}
         >
+          <Analytics />
           <ToastContainer />
           <NextTopLoader showSpinner={false} />
           <ClerkLoading>
